@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bound Already</title>
+<meta name="description" content="Books I've read, on a shelf. Borrow one, or recommend me another.">
+<meta property="og:title" content="Bound Already">
+<meta property="og:description" content="Books I've read, on a shelf. Borrow one, or recommend me another.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="covers/stay-true.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Archivo:wght@400;500;600&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Jost:wght@400&family=Pinyon+Script&family=Yellowtail&family=EB+Garamond:wght@400;600&family=Playfair+Display:wght@700;900&family=Josefin+Sans:wght@600&display=swap">
+<!-- only the Chinese characters the site uses: 中 寒 夜 (Cold Nights spine) and 開 卷 有 益 (About) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&text=%E4%B8%AD%E5%AF%92%E5%A4%9C%E9%96%8B%E5%8D%B7%E6%9C%89%E7%9B%8A&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="mark" href="#home">Bound Already</a>
+    <div class="right">
+      <button class="themebtn" type="button" id="theme"><i></i><span id="theme-l">Dark</span></button>
+      <nav class="top" aria-label="Pages">
+        <a href="#home" data-page="home">Shelf</a>
+        <a href="#archive" data-page="archive">Archives</a>
+        <a href="#borrow" data-page="borrow">Lend</a>
+        <a href="#recommend" data-page="recommend">Recommend</a>
+        <a href="#about" data-page="about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SHELF -->
+  <main class="page" id="page-home">
+    <div class="hero">
+      <h1>Bound Already</h1>
+    </div>
+    <div class="bleed">
+      <div class="stage" id="scene" aria-label="Bookshelf. Tab to reach each book; arrow keys move the shelf."><div class="row-inner" id="row"></div></div>
+      <div class="floor"></div>
+    </div>
+    <div class="caption" id="caption" aria-live="polite"></div>
+  </main>
+
+  <!-- ARCHIVES -->
+  <main class="page" id="page-archive" hidden>
+    <div class="pagehead">
+      <div><h1>Archives</h1></div>
+      <p class="standfirst">Archive of what I've read. Filter by category.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Arrange books by" id="arr">
+      <button type="button" data-by="all" aria-pressed="true">All</button>
+      <button type="button" data-by="country" aria-pressed="false">Country</button>
+      <button type="button" data-by="year" aria-pressed="false">Year</button>
+      <button type="button" data-by="author" aria-pressed="false">Author</button>
+    </div>
+    <div id="archive-body"></div>
+  </main>
+
+  <!-- LEND -->
+  <main class="page" id="page-borrow" hidden>
+    <div class="pagehead">
+      <div><span class="label kicker">Lend</span><h1>Lending library</h1></div>
+    </div>
+    <div class="cols">
+      <div><span class="n">1</span><p>Click a book. Click Borrow.</p></div>
+      <div><span class="n">2</span><p>I'll get in touch and hand or post you my copy.</p></div>
+      <div><span class="n">3</span><p>Write me a note in it, return it when done, and tell me what you thought.</p></div>
+    </div>
+    <div class="sectionhead"><h2>On my shelf</h2><span class="label" style="color:var(--muted)" id="lend-count"></span></div>
+    <div class="grid" id="lend-grid"></div>
+  </main>
+
+  <!-- RECOMMEND -->
+  <main class="page" id="page-recommend" hidden>
+    <div class="pagehead">
+      <div><h1>Recommend</h1></div>
+      <p class="standfirst">Tell me a book worth reading, and why.</p>
+    </div>
+    <div style="max-width:720px">
+      <form id="rec-form" novalidate>
+        <div class="row2">
+          <div class="field"><label for="rec-title">Title</label><input id="rec-title" maxlength="160"></div>
+          <div class="field"><label for="rec-author">Author</label><input id="rec-author" maxlength="120"></div>
+        </div>
+        <div class="field">
+          <label for="rec-why">Why should I read it?</label>
+          <textarea id="rec-why" maxlength="2000" placeholder="What does it do that other books don't? What stayed with you?"></textarea>
+          <span class="help" id="rec-why-help">At least 80 characters, please.</span>
+        </div>
+        <div class="field" style="max-width:340px">
+          <label for="rec-name">Your name</label><input id="rec-name" maxlength="80">
+          <span class="help">This will be anonymised.</span>
+        </div>
+        <div class="formfoot"><button class="btn" type="submit" id="rec-submit">Send recommendation</button><span class="status-msg" id="rec-status" role="status"></span></div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<!-- ABOUT: a book that opens over the page -->
+<div class="about" id="about" role="dialog" aria-modal="true" aria-label="About" hidden>
+  <button class="close" type="button" id="about-close">Close ✕</button>
+  <div class="ab-book" id="ab-book">
+    <div class="ab-page">
+      <div class="ab-en">
+        <span class="label">Chinese idiom</span>
+        <p>Reading is always profitable.</p>
+      </div>
+      <div class="ab-contact">
+        <span class="label">Contact</span>
+        <div class="ab-mail"><span id="ab-email">jy@boundalready.com</span><button type="button" id="ab-copy" aria-label="Copy email address">Copy</button></div>
+      </div>
+    </div>
+    <div class="ab-cover">
+      <div class="ab-front"><span>Bound<br>Already</span></div>
+      <div class="ab-inside"><p class="ab-zh" lang="zh-Hant">開卷有益</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK POP-OUT -->
+<dialog id="dlg" aria-labelledby="d-title">
+  <div class="dlg">
+    <button class="close" type="button" id="d-close">Close ✕</button>
+    <div><div class="bigcover" id="d-cover"></div></div>
+    <div>
+      <h2 id="d-title"></h2>
+      <div class="reflection" id="d-reflection"></div>
+      <section class="borrowbox" id="d-borrow" aria-label="Borrow"></section>
+    </div>
+  </div>
+</dialog>
+
+<script src="js/books.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
