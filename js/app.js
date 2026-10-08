@@ -196,7 +196,7 @@ function buildShelf(){
   measure(); applyPos();
 }
 function measure(){ if (firstClone) period = Math.max(1, firstClone.offsetLeft - row.firstElementChild.offsetLeft); }
-let x = 0, v = 0, hovering = false, drag = null, suppressClick = false, raf = 0, running = false;
+let x = 0, v = 0, drag = null, suppressClick = false, raf = 0, running = false;
 const DRIFT = reduceMotion ? 0 : 0.32;
 // x is kept within one loop, so when a turning book lengthens the loop the shelf doesn't jump
 function applyPos(){ x = ((x % period) + period) % period; row.style.transform = `translate3d(${-x}px,0,0)`; }
@@ -213,7 +213,7 @@ function tick(){
     delta = ((delta + period / 2) % period + period) % period - period / 2;
     x += (reduceMotion || Math.abs(delta) < 0.5) ? delta : delta * 0.12; v = 0;
   } else {
-    const target = hovering ? 0 : DRIFT;
+    const target = DRIFT;
     v += (target - v) * (reduceMotion ? 0.3 : 0.03);
     x += v;
   }
@@ -228,8 +228,6 @@ scene.addEventListener("wheel", e => {
   const d = (Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit;
   if (reduceMotion) x += d; else v = Math.max(-40, Math.min(40, v + d * 0.04));
 }, { passive:false });
-scene.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") hovering = true; });
-scene.addEventListener("pointerleave", () => { hovering = false; });
 scene.addEventListener("pointerdown", e => { if (e.button !== 0) return; drag = { x0:e.clientX, xStart:x, last:e.clientX, t:performance.now(), vel:0, moved:0, id:e.pointerId }; });
 scene.addEventListener("pointermove", e => {
   if (!drag) return;
@@ -293,10 +291,9 @@ function reshelve(){
 function setCaption(b){
   const c = $("caption"); c.textContent = "";
   if (!b) return;
-  const k = document.createElement("div"); k.className = "label kicker"; k.textContent = `${b.country.join(" · ")} · ${b.genre}`;
   const t = document.createElement("div"); t.className = "ct"; t.textContent = b.title;
   const a = document.createElement("div"); a.className = "ca"; a.textContent = b.author;
-  c.append(k, t, a);
+  c.append(t, a);
 }
 let resizeT;
 addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (!$("page-home").hidden) buildShelf(); }, 200); });
@@ -499,7 +496,7 @@ function openAbout(){
     about.hidden = false;
     requestAnimationFrame(() => about.classList.add("show"));
     $("about-close").focus();
-    later(() => about.classList.add("open"), 450);
+    later(() => about.classList.add("open"), 1450); // rests on the closed cover for a moment before opening
   }, onShelf ? 480 : 0);
 }
 function closeAbout(){

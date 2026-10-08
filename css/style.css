@@ -1,6 +1,6 @@
 :root{
-  --paper:#FFFFFF; --paper-2:#F3F2EE; --ink:#141414; --ink-2:#3A3A3A; --muted:#6E6E6A; --rule:#141414; --hair:#DCDAD4;
-  --accent:#B0201B; --field:#FFFFFF; --shelf-top:#E9E5DD; --shelf-front:#D3CCBF;
+  --paper:#F6F3EC; --paper-2:#ECE8DE; --ink:#141414; --ink-2:#3A3A3A; --muted:#6B6A64; --rule:#141414; --hair:#D9D4C9;
+  --accent:#B0201B; --field:#FBF9F4; --shelf-top:#E4DED2; --shelf-front:#CDC5B6;
   --display:"Cormorant Garamond", "Garamond", "Georgia", serif;
   --serif:"Source Serif 4", "Georgia", serif; --sans:"Archivo", "Helvetica Neue", Arial, sans-serif; --cond:"Anton", "Impact", sans-serif;
 }
