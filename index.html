@@ -13,8 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Archivo:wght@400;500;600&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Jost:wght@400&family=Pinyon+Script&family=Yellowtail&family=EB+Garamond:wght@400;600&family=Playfair+Display:wght@700;900&family=Josefin+Sans:wght@600&display=swap">
-<!-- only the Chinese characters the site uses: 中 寒 夜 (Cold Nights spine) and 開 卷 有 益 (About) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&text=%E4%B8%AD%E5%AF%92%E5%A4%9C%E9%96%8B%E5%8D%B7%E6%9C%89%E7%9B%8A&display=swap">
+<!-- only the Chinese characters the site uses: 中 寒 夜 (Cold Nights spine) and 讀萬卷書 行萬里路 (About) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&text=%E4%B8%AD%E5%AF%92%E5%A4%9C%E8%AE%80%E8%90%AC%E5%8D%B7%E6%9B%B8%E8%A1%8C%E9%87%8C%E8%B7%AF&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -105,19 +105,23 @@
 <div class="about" id="about" role="dialog" aria-modal="true" aria-label="About" hidden>
   <button class="close" type="button" id="about-close">Close ✕</button>
   <div class="ab-book" id="ab-book">
+    <!-- right-hand page: the idiom, read top to bottom, right to left -->
     <div class="ab-page">
-      <div class="ab-en">
-        <span class="label">Chinese idiom</span>
-        <p>Reading is always profitable.</p>
-      </div>
-      <div class="ab-contact">
-        <span class="label">Contact</span>
-        <div class="ab-mail"><span id="ab-email">jy@boundalready.com</span><button type="button" id="ab-copy" aria-label="Copy email address">Copy</button></div>
-      </div>
+      <p class="ab-zh" lang="zh-Hant">讀萬卷書<br>行萬里路</p>
     </div>
     <div class="ab-cover">
       <div class="ab-front"><span>Bound<br>Already</span></div>
-      <div class="ab-inside"><p class="ab-zh" lang="zh-Hant">開卷有益</p></div>
+      <!-- left-hand page (inside of the cover): the English and contact -->
+      <div class="ab-inside">
+        <div class="ab-en">
+          <span class="label">Chinese idiom</span>
+          <p>Ten thousand bound books; ten thousand journeys abound.</p>
+        </div>
+        <div class="ab-contact">
+          <span class="label">Contact</span>
+          <div class="ab-mail"><span id="ab-email">jy@boundalready.com</span><button type="button" id="ab-copy" aria-label="Copy email address">Copy</button></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
