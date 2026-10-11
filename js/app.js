@@ -164,11 +164,10 @@ function buildShelf(){
   const H = Math.round(Math.max(210, Math.min(380, innerHeight * 0.42, sceneW * 0.62)));
   scene.style.setProperty("--H", H + "px");
   row.textContent = ""; row.style.transform = "";
-  let k = 0, prevTilt = 0, prevFace = false, lastId = null, round = 0;
-  // A short list is laid out more than once (each copy styled afresh) so the shelf always fills the screen.
+  let k = 0, prevTilt = 0, prevFace = false;
+  // Each book goes on the shelf exactly once.
   const place = (b) => {
     const { btn, h, faceOut } = makeBook(b, H);
-    if (round > 0) btn.tabIndex = -1;
     const u = document.createElement("div"); u.className = "unit"; u.dataset.k = k++;
     // some books lean left or right, as on a real shelf
     let tilt = 0;
@@ -180,16 +179,23 @@ function buildShelf(){
     if (tilt) u.style.transform = `rotate(${tilt.toFixed(1)}deg)`;
     u.style.marginLeft = Math.round(gap) + "px";
     u.append(btn); row.append(u);
-    prevTilt = tilt; prevFace = faceOut; lastId = b.id;
+    prevTilt = tilt; prevFace = faceOut;
   };
-  do {
-    let order = shuffle(BOOKS);
-    if (order[0].id === lastId) order.push(order.shift());
-    order.forEach(place);
-    round++;
-  } while (row.scrollWidth < sceneW + 160 && round < 8);
+  shuffle(BOOKS).forEach(place);
   const end = document.createElement("div"); end.className = "unit"; end.style.width = "40px"; end.dataset.k = k++; row.append(end);
-  while (row.scrollWidth < sceneW + 160) { const sp = document.createElement("div"); sp.className = "unit"; sp.style.width = "80px"; sp.dataset.k = k++; row.append(sp); }
+  // The shelf loops, so the whole line must be wider than the screen plus a turned book;
+  // otherwise a book and its loop copy could be on screen at once. When there are too few
+  // books for that, the spare space goes into two empty stretches, so the books sit in
+  // clusters the way a half-full shelf does.
+  const minWidth = sceneW + Math.round(H * 0.7) + 60;
+  const short = minWidth - row.scrollWidth;
+  if (short > 0) {
+    const units = [...row.children].slice(1, -1);
+    const a = Math.floor(units.length / 3), b = Math.floor(units.length * 2 / 3);
+    [units[a + Math.floor(Math.random() * 2)], units[b + Math.floor(Math.random() * 2)]].forEach(u => {
+      u.style.marginLeft = Math.round(parseFloat(u.style.marginLeft) + short / 2) + "px";
+    });
+  }
   const originals = [...row.children];
   originals.forEach(n => { const c = n.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.querySelectorAll("button").forEach(btn => btn.tabIndex = -1); row.append(c); });
   firstClone = row.children[originals.length];
@@ -447,17 +453,15 @@ function renderLendGrid(){
 
 /* ============ RECOMMEND ============ */
 const why = $("rec-why");
-why.addEventListener("input", () => { const n = why.value.trim().length; $("rec-why-help").textContent = n >= 80 ? `${n} characters` : `${80 - n} more characters, please.`; });
 $("rec-form").addEventListener("submit", async e => {
   e.preventDefault();
   const msg = $("rec-status");
   const title = $("rec-title").value.trim(), author = $("rec-author").value.trim(), name = $("rec-name").value.trim(), text = why.value.trim();
-  if (!title || !author || !name) { msg.className = "status-msg err"; msg.textContent = "Fill in the title, author and your name."; return; }
-  if (text.length < 80) { msg.className = "status-msg err"; msg.textContent = "Tell me a bit more about why. At least 80 characters."; why.focus(); return; }
+  if (!title || !author || !text || !name) { msg.className = "status-msg err"; msg.textContent = "Fill in the title, author, why, and your name."; return; }
   $("rec-submit").disabled = true; msg.className = "status-msg"; msg.textContent = "Sending…";
   try {
     const how = await sendMessage(`Recommendation: ${title}`, { Book: `${title} by ${author}`, "Why read it": text, From: name });
-    if (how === "sent") { $("rec-form").reset(); $("rec-why-help").textContent = "At least 80 characters, please."; }
+    if (how === "sent") $("rec-form").reset();
     msg.className = "status-msg ok";
     msg.textContent = how === "sent" ? "Thank you. It's on my list." : "Your email app should open with the recommendation ready to send.";
   } catch {
@@ -496,7 +500,7 @@ function openAbout(){
     about.hidden = false;
     requestAnimationFrame(() => about.classList.add("show"));
     $("about-close").focus();
-    later(() => about.classList.add("open"), 1450); // rests on the closed cover for a moment before opening
+    later(() => about.classList.add("open"), 1050); // rests on the closed cover for a moment before opening
   }, onShelf ? 480 : 0);
 }
 function closeAbout(){
