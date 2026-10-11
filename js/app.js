@@ -13,6 +13,7 @@ const BRIGHT = [["#F2A7BE","#2A1219"],["#3E8E5E","#F4F1E8"],["#F26A2E","#FFF4EA"
 const SPINE_STYLES = ["block","block","serif","mono","band","horiz"];
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const RESHELVE_MS = 5000;
+const FACE_OUT_SHARE = 0.3; // share of books shown face-out on the shelf
 const byId = Object.fromEntries(BOOKS.map(b => [b.id, b]));
 const $ = (id) => document.getElementById(id);
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -125,12 +126,11 @@ function spinePart(p, w){
   }); else el.textContent = p.t;
   return el;
 }
-function makeBook(b, H){
+function makeBook(b, H, faceOut){
   const s = H / 340, spec = SPINES[b.id];
   const h = Math.round(H * (spec ? spec.h : rand(0.6, 0.97)));
   const w = Math.round(Math.max(26, Math.min(64, b.pages / 9)) * s);
   const cw = Math.round(h * 0.66);
-  const faceOut = b.cover && Math.random() < 0.14;
   const btn = document.createElement("button"); btn.type = "button";
   btn.className = "bk" + (faceOut ? " faceout" : "");
   btn.dataset.id = b.id;
@@ -165,9 +165,11 @@ function buildShelf(){
   scene.style.setProperty("--H", H + "px");
   row.textContent = ""; row.style.transform = "";
   let k = 0, prevTilt = 0, prevFace = false;
-  // Each book goes on the shelf exactly once.
+  // Each book goes on the shelf exactly once; a random 30% of them face out, showing their covers.
+  const withCovers = BOOKS.filter(b => b.cover);
+  const faceIds = new Set(shuffle(withCovers).slice(0, Math.round(BOOKS.length * FACE_OUT_SHARE)).map(b => b.id));
   const place = (b) => {
-    const { btn, h, faceOut } = makeBook(b, H);
+    const { btn, h, faceOut } = makeBook(b, H, faceIds.has(b.id));
     const u = document.createElement("div"); u.className = "unit"; u.dataset.k = k++;
     // some books lean left or right, as on a real shelf
     let tilt = 0;
@@ -185,16 +187,13 @@ function buildShelf(){
   const end = document.createElement("div"); end.className = "unit"; end.style.width = "40px"; end.dataset.k = k++; row.append(end);
   // The shelf loops, so the whole line must be wider than the screen plus a turned book;
   // otherwise a book and its loop copy could be on screen at once. When there are too few
-  // books for that, the spare space goes into two empty stretches, so the books sit in
-  // clusters the way a half-full shelf does.
+  // books for that, the spare space is shared evenly between them, so they spread along the shelf.
   const minWidth = sceneW + Math.round(H * 0.7) + 60;
   const short = minWidth - row.scrollWidth;
   if (short > 0) {
-    const units = [...row.children].slice(1, -1);
-    const a = Math.floor(units.length / 3), b = Math.floor(units.length * 2 / 3);
-    [units[a + Math.floor(Math.random() * 2)], units[b + Math.floor(Math.random() * 2)]].forEach(u => {
-      u.style.marginLeft = Math.round(parseFloat(u.style.marginLeft) + short / 2) + "px";
-    });
+    const units = [...row.children];
+    const extra = short / units.length;
+    units.forEach(u => { u.style.marginLeft = Math.round((parseFloat(u.style.marginLeft) || 0) + extra) + "px"; });
   }
   const originals = [...row.children];
   originals.forEach(n => { const c = n.cloneNode(true); c.setAttribute("aria-hidden", "true"); c.querySelectorAll("button").forEach(btn => btn.tabIndex = -1); row.append(c); });
