@@ -23,12 +23,14 @@ const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0;
 const isOut = (b) => !!b.onLoan;
 
 // Sends a form to CONTACT_EMAIL: through Formspree when it's set up, otherwise via the visitor's email app.
+// replyTo, when it's an email address, lets you answer the sender straight from your inbox.
 // Resolves "sent" or "mail-app"; rejects if Formspree refuses.
-async function sendMessage(subject, fields){
+async function sendMessage(subject, fields, replyTo){
   if (FORMSPREE_ID) {
+    const extra = /^\S+@\S+\.\S+$/.test(replyTo || "") ? { _replyto: replyTo } : {};
     const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
       method:"POST", headers:{ "Accept":"application/json", "Content-Type":"application/json" },
-      body: JSON.stringify({ _subject: subject, ...fields }),
+      body: JSON.stringify({ _subject: subject, ...extra, ...fields }),
     });
     if (!res.ok) throw new Error("send failed");
     return "sent";
@@ -417,7 +419,7 @@ function borrowForm(b){
     if (!name || !contact) { msg.className = "status-msg err"; msg.textContent = "Add your name and how to reach you."; return; }
     sub.disabled = true; msg.className = "status-msg"; msg.textContent = "Sending…";
     try {
-      const how = await sendMessage(`Borrow request: ${b.title}`, { Book: `${b.title} by ${b.author}`, Name: name, Contact: contact, Note: note || "—" });
+      const how = await sendMessage(`Borrow request: ${b.title}`, { Book: `${b.title} by ${b.author}`, Name: name, Contact: contact, Note: note || "—" }, contact);
       f.replaceChildren();
       const p = document.createElement("p"); p.style.margin = "0";
       p.textContent = how === "sent" ? `Request sent. I'll be in touch about ${b.title}.` : `Your email app should open with the request ready to send to ${CONTACT_EMAIL}.`;
@@ -456,10 +458,10 @@ $("rec-form").addEventListener("submit", async e => {
   e.preventDefault();
   const msg = $("rec-status");
   const title = $("rec-title").value.trim(), author = $("rec-author").value.trim(), name = $("rec-name").value.trim(), text = why.value.trim();
-  if (!title || !author || !text || !name) { msg.className = "status-msg err"; msg.textContent = "Fill in the title, author, why, and your name."; return; }
+  if (!title || !author || !text || !name) { msg.className = "status-msg err"; msg.textContent = "Fill in the title, author, why you enjoyed it, and your name."; return; }
   $("rec-submit").disabled = true; msg.className = "status-msg"; msg.textContent = "Sending…";
   try {
-    const how = await sendMessage(`Recommendation: ${title}`, { Book: `${title} by ${author}`, "Why read it": text, From: name });
+    const how = await sendMessage(`Recommendation: ${title}`, { Book: `${title} by ${author}`, "Why they enjoyed it": text, From: name });
     if (how === "sent") $("rec-form").reset();
     msg.className = "status-msg ok";
     msg.textContent = how === "sent" ? "Thank you. It's on my list." : "Your email app should open with the recommendation ready to send.";
