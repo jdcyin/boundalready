@@ -17,13 +17,13 @@
 // Spine designs live in js/app.js under SPINES. A book without one gets a plain coloured spine.
 
 const BOOKS = [
-  {id:"brothers", title:"兄弟", titleEn:"Brothers", author:"Yu Hua", last:"Yu Hua", year:null, month:null, day:null, country:["China"], genre:"Literary", lang:null, readIn:["Chinese"], format:"paper", onLoan:false, pages:640, color:0, cover:true,
+  {id:"brothers", title:"兄弟", titleEn:"Brothers", author:"Yu Hua", last:"Yu Hua", year:2026, month:9, day:null, country:["China"], genre:"Literary", lang:null, readIn:["Chinese"], format:"paper", onLoan:false, pages:640, color:0, cover:true,
    reflection:"Yu Hua is a master of tragedy, but somehow this book was longer than it was captivating. Some of the characters are unrealistic to the point of making me feel like they were unrelatable."},
-  {id:"ah-q", title:"阿Q正傳", titleEn:"The True Story of Ah Q", author:"Lu Xun", last:"Lu Xun", year:null, month:null, day:null, country:["China"], genre:"Literary", lang:null, readIn:["English", "Chinese"], format:"paper", onLoan:false, pages:160, color:6, cover:true,
+  {id:"ah-q", title:"阿Q正傳", titleEn:"The True Story of Ah Q", author:"Lu Xun", last:"Lu Xun", year:2020, month:null, day:null, country:["China"], genre:"Literary", lang:null, readIn:["English", "Chinese"], format:"paper", onLoan:false, pages:160, color:6, cover:true,
    reflection:"Not particularly interesting; a story about an idiot that makes his way through life. Idiotic to the point of comedy."},
-  {id:"wild-grass", title:"野草", titleEn:"Wild Grass", author:"Lu Xun", last:"Lu Xun", year:null, month:null, day:null, country:["China"], genre:"Poetry", lang:null, readIn:["English", "Chinese"], format:"paper", onLoan:false, pages:150, color:9, cover:true,
+  {id:"wild-grass", title:"野草", titleEn:"Wild Grass", author:"Lu Xun", last:"Lu Xun", year:2020, month:null, day:null, country:["China"], genre:"Poetry", lang:null, readIn:["English", "Chinese"], format:"paper", onLoan:false, pages:150, color:9, cover:true,
    reflection:"I don’t think my Chinese is at a level where I can totally appreciate Chinese poetry. Short and digestible book, interesting musings."},
-  {id:"japanese-short-stories", title:"The Penguin Book of Japanese Short Stories", author:"Jay Rubin (ed.)", last:"Rubin", year:null, month:null, day:null, country:["Japan"], genre:"Short stories", lang:"Japanese", readIn:["English"], format:"paper", onLoan:false, pages:560, color:1, cover:true,
+  {id:"japanese-short-stories", title:"The Penguin Book of Japanese Short Stories", author:"Jay Rubin (ed.)", last:"Rubin", year:2022, month:null, day:null, country:["Japan"], genre:"Short stories", lang:"Japanese", readIn:["English"], format:"paper", onLoan:false, pages:560, color:1, cover:true,
    reflection:"Japan has such a dedication to craft that this collection of short stories has some of pretty sick (grotesque), and just plain weird themes. So sick and weird that it’s fascinating."},
   {id:"stay-true", title:"Stay True", author:"Hua Hsu", last:"Hsu", year:2025, month:8, day:1, country:["USA"], genre:"Memoir", lang:null, readIn:["English"], format:"paper", onLoan:false, pages:208, color:7, cover:true,
    reflection:"A great mix of story and philosophy wrapped into a beautiful memoir, set in a place very close to home. Recommend to all my Bay Area people."},
