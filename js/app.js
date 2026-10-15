@@ -523,16 +523,17 @@ function openAbout(){
   if (onShelf) { reshelve(); if (!reduceMotion) rushUntil = performance.now() + 650; }
   later(() => {
     about.hidden = false;
-    requestAnimationFrame(() => about.classList.add("show"));
+    requestAnimationFrame(() => requestAnimationFrame(() => about.classList.add("show"))); // arrives at an angle, spine showing
     $("about-close").focus();
-    later(() => about.classList.add("open"), 1050); // rests on the closed cover for a moment before opening
+    later(() => about.classList.add("face"), 650);   // swings round to face you
+    later(() => about.classList.add("open"), 1500);  // rests on the closed cover a moment, then opens
   }, onShelf ? 480 : 0);
 }
 function closeAbout(){
   if (about.hidden) return;
   aboutTimers.forEach(clearTimeout); aboutTimers = [];
   about.classList.remove("open");
-  later(() => { about.classList.remove("show"); later(() => { about.hidden = true; }, 420); }, 650);
+  later(() => { about.classList.remove("face", "show"); later(() => { about.hidden = true; }, 420); }, 650);
   if (location.hash === "#about") history.replaceState(null, "", "#home");
   markNav(PAGES.find(p => !$("page-" + p).hidden) || "home");
 }

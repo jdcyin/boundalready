@@ -196,16 +196,34 @@ table.list tr.grp td{font-family:var(--display);font-size:1.5rem;font-weight:500
 .rec .by{font-size:.92rem;color:var(--ink-2);font-style:italic;margin:2px 0 8px}
 .rec p{margin:0;white-space:pre-wrap}
 
-/* ---------- about: a book that opens ---------- */
+/* ---------- about: the house edition of Bound Already, as a 3D book that opens ---------- */
 .about{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px}
 .about::before{content:"";position:absolute;inset:0;background:var(--paper);opacity:0;transition:opacity .4s ease}
-.about.show::before{opacity:.94}
+.about.show::before{opacity:.95}
 .about .close{z-index:2}
-.ab-book{--pw:min(300px,42vw);position:relative;width:var(--pw);aspect-ratio:2/3;perspective:1800px;
-  transform:translateY(40px) scale(.7);opacity:0;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
-.about.show .ab-book{transform:none;opacity:1}
+/* --pw page width, --t book thickness */
+.ab-book{--pw:min(300px,42vw);--t:24px;position:relative;width:var(--pw);aspect-ratio:2/3;perspective:1600px;transition:transform .9s cubic-bezier(.3,.7,.2,1)}
 .about.open .ab-book{transform:translateX(calc(var(--pw) / 2))}
-.ab-page{position:absolute;inset:0;background:#FBF8F1;color:#1A1A1A;box-shadow:0 30px 60px rgba(0,0,0,.22);
+/* soft shadow on the "table" under the book */
+.ab-book::after{content:"";position:absolute;left:6%;right:-4%;bottom:-26px;height:26px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.22),transparent);opacity:0;transition:opacity .6s ease .2s,left 1s cubic-bezier(.35,.6,.2,1)}
+.about.show .ab-book::after{opacity:1}
+.about.open .ab-book::after{left:-96%}
+/* the book object: arrives turned to show its spine, swings round to face you, then opens */
+.ab-obj{position:absolute;inset:0;transform-style:preserve-3d;opacity:0;
+  transform:translateY(46px) rotateY(38deg) rotateX(8deg) scale(.84);
+  transition:transform .75s cubic-bezier(.25,.8,.25,1),opacity .35s ease}
+.about.show .ab-obj{opacity:1;transform:rotateY(30deg) rotateX(4deg)}
+.about.face .ab-obj{transform:none}
+/* spine (left side) and page edges (right side), each the book's thickness deep */
+.ab-spine,.ab-edge{position:absolute;top:0;bottom:0;width:var(--t)}
+.ab-spine{left:calc(var(--t) * -1);transform-origin:right center;transform:rotateY(-90deg);background:var(--ink);color:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:16px 0 14px}
+.ab-spine span{writing-mode:vertical-rl;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:calc(var(--t) * .52);white-space:nowrap}
+.ab-spine i{width:7px;height:7px;background:var(--accent)}
+.ab-edge{left:100%;transform-origin:left center;transform:rotateY(90deg);
+  background:repeating-linear-gradient(90deg,#F4EFE4 0 1px,#E1D9CA 1px 2px)}
+/* right-hand page */
+.ab-page{position:absolute;inset:0;background:#FBF8F1;color:#1A1A1A;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(18px,4vh,34px);padding:28px 22px;text-align:center}
 .ab-page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,rgba(0,0,0,.12),transparent)}
 /* vertical-rl: each line runs top to bottom, and the second line sits to the left of the first */
@@ -216,23 +234,35 @@ table.list tr.grp td{font-family:var(--display);font-size:1.5rem;font-weight:500
 /* contact sits at the foot of the left-hand page, leaving the idiom centred on the page */
 .ab-contact{position:absolute;left:22px;right:22px;bottom:22px;display:grid;gap:5px;padding-top:12px;border-top:1px solid #DDD6C8;text-align:center;justify-items:center}
 .ab-contact .label{color:#6E6E6A}
-.ab-mail{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;font-family:var(--sans);font-size:clamp(.72rem,2.4vw,.9rem);color:#1A1A1A;user-select:all;-webkit-user-select:all;word-break:break-all}
+.ab-mail{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;font-family:var(--sans);font-size:clamp(.66rem,2.1vw,.8rem);font-weight:600;letter-spacing:.1em;color:#1A1A1A;word-break:break-all}
+#ab-email{text-transform:uppercase;user-select:all;-webkit-user-select:all}
 .ab-mail button{font-family:var(--sans);font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;background:none;color:#1A1A1A;border:1px solid #1A1A1A;padding:4px 8px;cursor:pointer;user-select:none;-webkit-user-select:none}
 .ab-mail button:hover{background:#1A1A1A;color:#FBF8F1}
 .ab-zh,.ab-en,.ab-contact{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease}
 .about.open .ab-zh{opacity:1;transform:none;transition-delay:.75s}
 .about.open .ab-en{opacity:1;transform:none;transition-delay:1.05s}
 .about.open .ab-contact{opacity:1;transform:none;transition-delay:1.3s}
-@media (max-width:640px){ .ab-book{--pw:46vw} .ab-page,.ab-inside{padding:18px 12px} .ab-contact{left:12px;right:12px;bottom:12px;padding-top:8px} }
+/* the cover: swings open on its left edge */
 .ab-cover{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;transition:transform 1.1s cubic-bezier(.35,.6,.2,1)}
 .about.open .ab-cover{transform:rotateY(-177deg)}
 .ab-front,.ab-inside{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.ab-front{background:#7A2420;color:#F3EADF;display:grid;place-items:center;box-shadow:inset 8px 0 0 rgba(0,0,0,.18),inset 0 0 0 12px rgba(0,0,0,.08),0 20px 40px rgba(0,0,0,.25)}
-.ab-front span{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(1.3rem,4vw,2rem);line-height:1;text-align:center;letter-spacing:.04em;border-top:1px solid currentColor;border-bottom:1px solid currentColor;padding:12px 4px}
+/* house style: solid ink, the site's display serif, a fine inset rule and the red square.
+   Uses the theme tokens, so it is black on eggshell in light mode and inverts in dark mode. */
+.ab-front{background:var(--ink);color:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,24px);
+  box-shadow:inset 3px 0 0 rgba(255,255,255,.08),inset -1px 0 0 rgba(0,0,0,.4)}
+.ab-front::before{content:"";position:absolute;inset:12px;border:1px solid currentColor;opacity:.35;pointer-events:none}
+.ab-word{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:calc(var(--pw) * .15);line-height:.95;text-align:center;letter-spacing:.05em}
+.ab-mark{width:calc(var(--pw) * .035);height:calc(var(--pw) * .035);min-width:7px;min-height:7px;background:var(--accent)}
 .ab-inside{transform:rotateY(180deg);background:#FBF8F1;color:#1A1A1A;box-shadow:inset -18px 0 24px -12px rgba(0,0,0,.16);
   display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 22px}
-/* phones: the page is small, so centre the idiom in the space above the contact details */
-@media (max-width:640px){ .ab-inside{padding:12px 12px 92px} }
+@media (max-width:640px){
+  .ab-book{--pw:46vw;--t:16px}
+  .ab-page{padding:18px 12px}
+  .ab-inside{padding:12px 12px 92px}
+  .ab-contact{left:12px;right:12px;bottom:12px;padding-top:8px}
+  #ab-email{white-space:nowrap;font-size:.56rem;letter-spacing:.04em}
+}
+@media (prefers-reduced-motion: reduce){ .ab-obj,.ab-book,.ab-cover{transition:none} }
 
 /* ---------- book pop-out ---------- */
 dialog{border:0;border-top:4px solid var(--rule);padding:0;max-width:min(960px,calc(100vw - 32px));width:100%;max-height:calc(100vh - 32px);background:var(--paper);color:var(--ink);border-radius:0;box-shadow:0 40px 90px rgba(0,0,0,.35)}
