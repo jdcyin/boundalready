@@ -21,6 +21,11 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const isOut = (b) => !!b.onLoan;
+// Original-language title, with the English title in brackets when there is one: 兄弟 (Brothers)
+const fullTitle = (b) => b.titleEn ? `${b.title} (${b.titleEn})` : b.title;
+// Newest first; books with no date go last
+const readKey = (b) => (b.year || 0) * 10000 + (b.month || 0) * 100 + (b.day || 0);
+const newestFirst = (a, b) => readKey(b) - readKey(a);
 
 // Sends a form to CONTACT_EMAIL: through Formspree when it's set up, otherwise via the visitor's email app.
 // replyTo, when it's an email address, lets you answer the sender straight from your inbox.
@@ -58,7 +63,7 @@ function coverEl(b){
   if (b.cover) { const img = document.createElement("img"); img.src = "covers/" + b.id + ".jpg"; img.alt = ""; img.draggable = false; return img; }
   const [bg, fg] = CLOTH[b.color];
   const d = document.createElement("div"); d.className = "dcover"; d.style.setProperty("--c", bg); d.style.setProperty("--t", fg);
-  const t = document.createElement("div"); t.className = "ct"; t.textContent = b.title;
+  const t = document.createElement("div"); t.className = "ct"; t.textContent = fullTitle(b);
   const a = document.createElement("div"); a.className = "ca"; a.textContent = b.author;
   d.append(t, a);
   return d;
@@ -103,6 +108,26 @@ const SPINES = {
   "moby-dick": { h:.8, bg:"#16191E", parts:[
     { f:"'EB Garamond'", fs:.3, lines:[ { t:"HERMAN MELVILLE", c:"#FFFFFF", fs:.24, wt:600, ls:".12em" }, { t:"MOBY-DICK", c:"#E8E6E1", ls:".08em" } ] },
     { logo:{ bg:"#FFFFFF", fg:"#16191E" }, auto:1 } ]},
+  // Chinese University Press bilingual series, like Cold Nights
+  "wild-grass": { h:.84, bg:"linear-gradient(180deg,#A3185A 0 11%,#F3F2EE 11%)", pad:"6px 0 10px", parts:[
+    { t:"中", f:"'Noto Serif TC'", wt:900, fs:.42, c:"#FFFFFF", up:1 },
+    { t:"野草", f:"'Noto Serif TC'", wt:900, fs:.5, c:"#141414", up:1, mt:"12px" },
+    { t:"WILD GRASS", f:"'Playfair Display'", wt:900, fs:.44, c:"#141414" },
+    { t:"LU XUN", f:"'Playfair Display'", wt:700, fs:.3, c:"#141414", ls:".08em", auto:1 } ]},
+  "ah-q": { h:.84, bg:"linear-gradient(180deg,#A3185A 0 11%,#F3F2EE 11%)", pad:"6px 0 10px", parts:[
+    { t:"中", f:"'Noto Serif TC'", wt:900, fs:.42, c:"#FFFFFF", up:1 },
+    { t:"阿Q正傳", f:"'Noto Serif TC'", wt:900, fs:.46, c:"#141414", up:1, mt:"12px" },
+    { t:"THE TRUE STORY OF AH Q", f:"'Playfair Display'", wt:900, fs:.3, c:"#141414" },
+    { t:"LU XUN", f:"'Playfair Display'", wt:700, fs:.3, c:"#141414", ls:".08em", auto:1 } ]},
+  // Penguin Classics: dark band with white italic title, painting colours at the head
+  "japanese-short-stories": { h:.9, bg:"linear-gradient(180deg,#E07AA8 0 9%,#9FC46A 9% 20%,#172130 20%)", pad:"14px 0 10px", parts:[
+    { f:"'EB Garamond'", fs:.24, lines:[ { t:"The Penguin Book of", c:"#FFFFFF", it:1 }, { t:"Japanese Short Stories", c:"#FFFFFF", it:1 } ], mt:"26%" },
+    { logo:{ bg:"#FFFFFF", fg:"#172130" }, auto:1 } ]},
+  // the red volume of the 10th-anniversary edition: 兄弟 in white on a black block
+  "brothers": { h:.92, bg:"#D2232A", pad:"10px 0", parts:[
+    { t:"兄弟", f:"'Noto Serif TC'", wt:900, fs:.58, c:"#FFFFFF", up:1, bg:"#121212", pad:"10px 4px" },
+    { t:"余華", f:"'Noto Serif TC'", wt:900, fs:.4, c:"#121212", up:1, mt:"8px" },
+    { t:"麥田", f:"'Noto Serif TC'", wt:900, fs:.3, c:"#FFFFFF", up:1, auto:1 } ]},
   "the-corrections": { h:.97, bg:"#121212", parts:[
     { f:"'Anton'", fs:.3, ls:".02em", lines:[ { t:"JONATHAN FRANZEN", c:"#FFFFFF" }, { t:"THE CORRECTIONS", c:"#EA5A3D", it:1 } ] } ]},
 };
@@ -136,7 +161,7 @@ function makeBook(b, H, faceOut){
   const btn = document.createElement("button"); btn.type = "button";
   btn.className = "bk" + (faceOut ? " faceout" : "");
   btn.dataset.id = b.id;
-  btn.setAttribute("aria-label", `${b.title} by ${b.author}`);
+  btn.setAttribute("aria-label", `${fullTitle(b)} by ${b.author}`);
   let sf;
   if (spec) {
     btn.style.cssText = `--w:${w}px;--h:${h}px;--cw:${cw}px`;
@@ -150,7 +175,7 @@ function makeBook(b, H, faceOut){
     const big = Math.round(Math.max(14, Math.min(46, w * 0.72)));
     btn.style.cssText = `--w:${w}px;--h:${h}px;--cw:${cw}px;--c:${pal[0]};--t:${pal[1]};--c2:${band[0]};--fs:${fs}px;--big:${big}px`;
     sf = document.createElement("span"); sf.className = `face spine-face st-${style}`;
-    const t = document.createElement("span"); t.className = "t"; t.textContent = b.title;
+    const t = document.createElement("span"); t.className = "t"; t.textContent = fullTitle(b);
     const a = document.createElement("span"); a.className = "a"; a.textContent = b.last;
     sf.append(t, a);
   }
@@ -298,7 +323,7 @@ function reshelve(){
 function setCaption(b){
   const c = $("caption"); c.textContent = "";
   if (!b) return;
-  const t = document.createElement("div"); t.className = "ct"; t.textContent = b.title;
+  const t = document.createElement("div"); t.className = "ct"; t.textContent = fullTitle(b);
   const a = document.createElement("div"); a.className = "ca"; a.textContent = b.author;
   c.append(t, a);
 }
@@ -307,30 +332,28 @@ addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout((
 
 /* ============ ARCHIVES: cover tiles, grouped by the toggle ============ */
 let arrangeBy = "all";
-const byTitle = (a,b) => a.title.replace(/^The /, "").localeCompare(b.title.replace(/^The /, ""));
 function archiveGroups(){
-  const newestFirst = (a,b) => (b.year - a.year) || (b.month - a.month) || ((b.day || 0) - (a.day || 0));
   if (arrangeBy === "all") return [{ label:null, books:[...BOOKS].sort(newestFirst) }];
   const groups = new Map();
   const add = (k, b) => { if (!groups.has(k)) groups.set(k, []); groups.get(k).push(b); };
   BOOKS.forEach(b => {
     if (arrangeBy === "country") b.country.forEach(c => add(c, b));
-    if (arrangeBy === "genre") add(b.genre, b);
-    if (arrangeBy === "year") add(String(b.year), b);
+    if (arrangeBy === "language") (b.readIn || ["English"]).forEach(l => add(l, b));
+    if (arrangeBy === "year") add(b.year ? String(b.year) : "Undated", b);
     if (arrangeBy === "author") add(b.author, b);
   });
   const keys = [...groups.keys()];
   if (arrangeBy === "author") keys.sort((a,b) => groups.get(a)[0].last.localeCompare(groups.get(b)[0].last));
-  else if (arrangeBy === "year") keys.sort((a,b) => b - a);
+  else if (arrangeBy === "year") keys.sort((a,b) => (Number(b) || 0) - (Number(a) || 0));
   else keys.sort();
   return keys.map(k => ({ label:k, books: groups.get(k).sort(newestFirst) }));
 }
 function tile(b){
   const card = document.createElement("div"); card.className = "card";
-  const cb = document.createElement("button"); cb.type = "button"; cb.className = "cvbtn"; cb.setAttribute("aria-label", `Open ${b.title}`);
+  const cb = document.createElement("button"); cb.type = "button"; cb.className = "cvbtn"; cb.setAttribute("aria-label", `Open ${fullTitle(b)}`);
   const cv = document.createElement("div"); cv.className = "cv"; cv.append(coverEl(b)); cb.append(cv);
   cb.onclick = () => openBook(b.id);
-  const ti = document.createElement("div"); ti.className = "ti"; ti.textContent = b.title;
+  const ti = document.createElement("div"); ti.className = "ti"; ti.textContent = fullTitle(b);
   const au = document.createElement("div"); au.className = "au"; au.textContent = b.author;
   card.append(cb, ti, au);
   return card;
@@ -362,7 +385,8 @@ function openBook(id, expandBorrow){
   if (openId !== id) {
     openId = id; borrowOpen = !!expandBorrow;
     const cv = $("d-cover"); cv.textContent = ""; cv.append(coverEl(b));
-    $("d-title").textContent = b.title;
+    $("d-title").textContent = fullTitle(b);
+    $("d-readin").textContent = "Read in " + (b.readIn || ["English"]).join(" · ");
     const r = $("d-reflection");
     r.textContent = "";
     (b.reflection || "").split(/\n\n+/).forEach(para => {
@@ -419,10 +443,10 @@ function borrowForm(b){
     if (!name || !contact) { msg.className = "status-msg err"; msg.textContent = "Add your name and how to reach you."; return; }
     sub.disabled = true; msg.className = "status-msg"; msg.textContent = "Sending…";
     try {
-      const how = await sendMessage(`Borrow request: ${b.title}`, { Book: `${b.title} by ${b.author}`, Name: name, Contact: contact, Note: note || "—" }, contact);
+      const how = await sendMessage(`Borrow request: ${fullTitle(b)}`, { Book: `${fullTitle(b)} by ${b.author}`, Name: name, Contact: contact, Note: note || "—" }, contact);
       f.replaceChildren();
       const p = document.createElement("p"); p.style.margin = "0";
-      p.textContent = how === "sent" ? `Request sent. I'll be in touch about ${b.title}.` : `Your email app should open with the request ready to send to ${CONTACT_EMAIL}.`;
+      p.textContent = how === "sent" ? `Request sent. I'll be in touch about ${fullTitle(b)}.` : `Your email app should open with the request ready to send to ${CONTACT_EMAIL}.`;
       f.append(p);
     } catch {
       sub.disabled = false; msg.className = "status-msg err";
@@ -436,16 +460,16 @@ $("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").cl
 $("dlg").addEventListener("close", () => { openId = null; });
 
 /* ============ BORROW PAGE ============ */
-const lendable = BOOKS.filter(b => b.format === "paper").sort((a,b) => a.title.localeCompare(b.title));
+const lendable = BOOKS.filter(b => b.format === "paper").sort((a,b) => fullTitle(a).localeCompare(fullTitle(b)));
 function renderLendGrid(){
   const g = $("lend-grid"); g.textContent = "";
   $("lend-count").textContent = `${lendable.filter(b => !isOut(b)).length} of ${lendable.length} available`;
   lendable.forEach(b => {
     const card = document.createElement("div"); card.className = "card";
-    const cb = document.createElement("button"); cb.type = "button"; cb.className = "cvbtn"; cb.setAttribute("aria-label", `Borrow ${b.title}`);
+    const cb = document.createElement("button"); cb.type = "button"; cb.className = "cvbtn"; cb.setAttribute("aria-label", `Borrow ${fullTitle(b)}`);
     const cv = document.createElement("div"); cv.className = "cv"; cv.append(coverEl(b)); cb.append(cv);
     cb.onclick = () => openBook(b.id);
-    const ti = document.createElement("div"); ti.className = "ti"; ti.textContent = b.title;
+    const ti = document.createElement("div"); ti.className = "ti"; ti.textContent = fullTitle(b);
     const au = document.createElement("div"); au.className = "au"; au.textContent = b.author;
     card.append(cb, ti, au, availEl(b));
     g.append(card);
