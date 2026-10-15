@@ -22,6 +22,8 @@ Open `index.html` in a browser. Everything works except sending forms, which nee
 2. In `js/books.js`, copy an entry, change the details and the `id`, and paste your notes into `reflection`.
 3. Optional: give it a spine that matches the cover by adding an entry to `SPINES` near the top of `js/app.js` (copy a similar one). Without one it gets a plain coloured spine.
 
+After changing anything in `css/` or `js/`, bump the `?v=` date on those links in `index.html` so visitors' browsers load the new version. If you don't see a change right after pushing, do a hard refresh (Ctrl/Cmd + Shift + R).
+
 To mark a book as lent out, set `onLoan:true` on it in `js/books.js`; set it back to `false` when it's returned.
 
 ## Put it online with GitHub Pages
