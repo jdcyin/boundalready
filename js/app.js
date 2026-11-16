@@ -128,10 +128,13 @@ const SPINES = {
     { t:"兄弟", f:"'Noto Serif TC'", wt:900, fs:.58, c:"#FFFFFF", up:1, bg:"#121212", pad:"10px 4px" },
     { t:"余華", f:"'Noto Serif TC'", wt:900, fs:.4, c:"#121212", up:1, mt:"8px" },
     { t:"麥田", f:"'Noto Serif TC'", wt:900, fs:.3, c:"#FFFFFF", up:1, auto:1 } ]},
-  // "No tan clásicos" edition: orange, hand-lettered title on the black pot, author in spaced capitals
-  "como-agua-para-chocolate": { h:.86, bg:"#EE7001", pad:"12px 0 10px", parts:[
-    { t:"Como agua para Chocolate", f:"'Yellowtail'", fs:.36, c:"#FFFFFF", bg:"#0A1014", pad:"8px 3px" },
-    { t:"LAURA ESQUIVEL", f:"'Jost'", fs:.26, c:"#0A1014", ls:".1em", auto:1 } ]},
+  // "No tan clásicos" edition: white spine, orange pot, title in orange capitals beside the author,
+  // the black "L'espagnol en V.O." badge and the publisher's B: at the foot
+  "como-agua-para-chocolate": { h:.86, bg:"linear-gradient(90deg,#ECEBE6,#F7F6F2 30%,#F7F6F2 70%,#E6E4DE)", pad:"12px 0 10px", parts:[
+    { svg:'<svg viewBox="0 0 40 30"><g fill="#F3962A"><rect x="17" y="1" width="6" height="3" rx="1"/><path d="M5 10Q20 2 35 10V12H5Z"/><rect x="1" y="14" width="6" height="4" rx="1.5"/><rect x="33" y="14" width="6" height="4" rx="1.5"/><path d="M6 13H34V25Q34 29 30 29H10Q6 29 6 25Z"/></g></svg>', size:.6 },
+    { f:"'Josefin Sans'", fs:.3, mt:"10px", lines:[ { t:"COMO AGUA PARA CHOCOLATE", c:"#F3962A", wt:600, ls:".12em" }, { t:"LAURA ESQUIVEL", c:"#4A4A48", f:"'Jost'", ls:".16em" } ] },
+    { svg:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#111"/><g transform="rotate(90 20 20)" fill="#fff" font-family="Archivo,sans-serif" text-anchor="middle"><text x="20" y="18" font-size="7" font-weight="700">L\'ESPAGNOL</text><text x="20" y="27" font-size="7">EN V.O.</text></g></svg>', size:.78, auto:1 },
+    { svg:'<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#111"/><text x="10" y="14" transform="rotate(90 10 10)" fill="#fff" font-family="Archivo,sans-serif" font-size="11" font-weight="700" text-anchor="middle">B:</text></svg>', size:.36, mt:"6px" } ]},
   "the-corrections": { h:.97, bg:"#121212", parts:[
     { f:"'Anton'", fs:.3, ls:".02em", lines:[ { t:"JONATHAN FRANZEN", c:"#FFFFFF" }, { t:"THE CORRECTIONS", c:"#EA5A3D", it:1 } ] } ]},
 };
@@ -140,6 +143,12 @@ function spinePart(p, w){
     const lg = document.createElement("span"); lg.className = "sp-logo" + (p.auto ? " auto" : "");
     lg.style.cssText = `width:${Math.round(w * .34)}px;height:${Math.round(w * .46)}px;background:${p.logo.bg};--fg:${p.logo.fg}`;
     return lg;
+  }
+  if (p.svg) { // a small drawing from the edition's spine (fixed markup written in SPINES)
+    const ic = document.createElement("span"); ic.className = "sp-svg" + (p.auto ? " auto" : "");
+    ic.style.width = Math.round(w * p.size) + "px"; if (p.mt) ic.style.marginTop = p.mt;
+    ic.innerHTML = p.svg;
+    return ic;
   }
   const el = document.createElement("span"); el.className = "sp" + (p.auto ? " auto" : "") + (p.up ? " up" : "");
   const px = (f) => Math.round(Math.max(8, Math.min(44, f * w)));
@@ -151,7 +160,7 @@ function spinePart(p, w){
   if (p.mt) el.style.marginTop = p.mt;
   if (p.lines) p.lines.forEach(l => {
     const s = document.createElement("span"); s.className = "sp-line"; s.textContent = l.t;
-    if (l.c) s.style.color = l.c; if (l.fs) s.style.fontSize = px(l.fs) + "px";
+    if (l.c) s.style.color = l.c; if (l.f) s.style.fontFamily = l.f; if (l.fs) s.style.fontSize = px(l.fs) + "px";
     if (l.ls) s.style.letterSpacing = l.ls; if (l.wt) s.style.fontWeight = l.wt; if (l.it) s.style.fontStyle = "italic";
     el.append(s);
   }); else el.textContent = p.t;

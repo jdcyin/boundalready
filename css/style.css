@@ -95,6 +95,8 @@ nav.top a[aria-current="page"]{color:var(--ink);text-decoration:underline;text-u
 .spine-face .sp.up{text-orientation:upright;letter-spacing:.05em}
 .spine-face .sp-line{display:block}
 .spine-face .auto{margin-top:auto}
+.sp-svg{flex:none;line-height:0;pointer-events:none}
+.sp-svg svg{width:100%;height:auto;display:block}
 .sp-logo{flex:none;border-radius:50%;position:relative}
 .sp-logo::after{content:"";position:absolute;left:32%;right:32%;top:22%;bottom:18%;border-radius:50% 50% 40% 40%;background:var(--fg)}
 .st-block .t{font-family:var(--cond);text-transform:uppercase;font-size:var(--big);line-height:1;letter-spacing:.01em}
