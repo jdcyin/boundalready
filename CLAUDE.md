@@ -3,8 +3,8 @@
 Jason's personal reading site: a shelf of the books he has read, his short reflections on each, a lending library for his paper copies, and a form for recommendations. Static HTML/CSS/JS, no build step, hosted on GitHub Pages.
 
 - Repo: `jdcyin/boundalready` (public; branch `main`, Pages serves the repo root)
-- Live: https://jasonyin.com/boundalready/ (his GitHub account's custom domain is jasonyin.com)
-- Planned: own domain `boundalready.com`, bought on Cloudflare; email `jy@boundalready.com` forwarded to Gmail via Cloudflare Email Routing; forms via Formspree. Steps are in `README.md`. No `CNAME` file until the domain exists.
+- Live: https://boundalready.com (domain on Cloudflare, DNS-only records to GitHub Pages, HTTPS enforced; `CNAME` file in the repo, so pull before pushing if GitHub edits it). The old https://jasonyin.com/boundalready/ redirects there.
+- Planned: email `jy@boundalready.com` forwarded to Gmail via Cloudflare Email Routing; forms via Formspree. Steps are in `README.md`.
 
 ## Files
 
@@ -34,7 +34,7 @@ Each book: `id, title, titleEn?, author, last, year, month, day, country[], genr
   - Click 1: the book stands up straight, turns to show its cover (red "Open" ribbon), glides to the centre, and its title/author appear below. It reshelves 5 s (`RESHELVE_MS`) after that first click, and the shelf resumes drifting.
   - Click 2: opens the pop-out and reshelves the book immediately.
   - Loop maths: `x` is kept within one period (`applyPos`), period is re-measured every frame (turned books widen it), and centring takes the shortest way round the loop. Don't reintroduce `x % period` on an unbounded `x`; that caused jumps.
-- **Spines:** hand-designed per edition in `SPINES` (js/app.js) to match each cover's colours and lettering (fonts: Anton, Bebas Neue, Jost, Pinyon Script, Yellowtail, EB Garamond, Playfair Display, Josefin Sans, Archivo Black, Noto Serif TC). Parts stack top to bottom; `lines` sit side by side; `up:1` = upright CJK; `logo` = publisher oval. A book without a spec gets a random plain style.
+- **Spines:** hand-designed per edition in `SPINES` (js/app.js) to match each cover's colours and lettering (fonts: Anton, Bebas Neue, Jost, Pinyon Script, Yellowtail, EB Garamond, Playfair Display, Josefin Sans, Archivo Black, Noto Serif TC). Parts stack top to bottom; `lines` sit side by side; `up:1` = upright CJK; `logo` = publisher oval; `svg` (+ `size` as a fraction of spine width) = a small inline drawing such as a cover motif or badge. A book without a spec gets a random plain style.
 - **Archives:** heading + "What I've read. Filter by category." and an ALL · COUNTRY · LANGUAGE · YEAR · AUTHOR toggle. Cover tiles; no counts. ALL is newest first.
 - **Book pop-out:** cover, title, "Read in …", the reflection (ends with a small red square), and the Borrow box. No other metadata.
 - **Lend:** "Lending library" heading, three steps (Click a book. Click Borrow. / I'll get in touch and hand or post you my copy. / Write me a note in it, return it when done, and tell me what you thought.), then a grid of paper copies.
