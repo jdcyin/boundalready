@@ -35,7 +35,7 @@ Each book: `id, title, titleEn?, author, last, year, month, day, country[], genr
   - Click 2: opens the pop-out and reshelves the book immediately.
   - Loop maths: `x` is kept within one period (`applyPos`), period is re-measured every frame (turned books widen it), and centring takes the shortest way round the loop. Don't reintroduce `x % period` on an unbounded `x`; that caused jumps.
 - **Spines:** hand-designed per edition in `SPINES` (js/app.js) to match each cover's colours and lettering (fonts: Anton, Bebas Neue, Jost, Pinyon Script, Yellowtail, EB Garamond, Playfair Display, Josefin Sans, Archivo Black, Noto Serif TC). Parts stack top to bottom; `lines` sit side by side; `up:1` = upright CJK; `logo` = publisher oval. A book without a spec gets a random plain style.
-- **Archives:** heading + "Archive of what I've read. Filter by category." and an ALL · COUNTRY · LANGUAGE · YEAR · AUTHOR toggle. Cover tiles; no counts. ALL is newest first.
+- **Archives:** heading + "What I've read. Filter by category." and an ALL · COUNTRY · LANGUAGE · YEAR · AUTHOR toggle. Cover tiles; no counts. ALL is newest first.
 - **Book pop-out:** cover, title, "Read in …", the reflection (ends with a small red square), and the Borrow box. No other metadata.
 - **Lend:** "Lending library" heading, three steps (Click a book. Click Borrow. / I'll get in touch and hand or post you my copy. / Write me a note in it, return it when done, and tell me what you thought.), then a grid of paper copies.
 - **Recommend:** RECOMMEND heading, "Tell me a book worth reading, and why.", fields Title, Author, "Why did you enjoy it?", Your name ("This will be anonymised.").

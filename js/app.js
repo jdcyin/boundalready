@@ -128,6 +128,10 @@ const SPINES = {
     { t:"兄弟", f:"'Noto Serif TC'", wt:900, fs:.58, c:"#FFFFFF", up:1, bg:"#121212", pad:"10px 4px" },
     { t:"余華", f:"'Noto Serif TC'", wt:900, fs:.4, c:"#121212", up:1, mt:"8px" },
     { t:"麥田", f:"'Noto Serif TC'", wt:900, fs:.3, c:"#FFFFFF", up:1, auto:1 } ]},
+  // "No tan clásicos" edition: orange, hand-lettered title on the black pot, author in spaced capitals
+  "como-agua-para-chocolate": { h:.86, bg:"#EE7001", pad:"12px 0 10px", parts:[
+    { t:"Como agua para Chocolate", f:"'Yellowtail'", fs:.36, c:"#FFFFFF", bg:"#0A1014", pad:"8px 3px" },
+    { t:"LAURA ESQUIVEL", f:"'Jost'", fs:.26, c:"#0A1014", ls:".1em", auto:1 } ]},
   "the-corrections": { h:.97, bg:"#121212", parts:[
     { f:"'Anton'", fs:.3, ls:".02em", lines:[ { t:"JONATHAN FRANZEN", c:"#FFFFFF" }, { t:"THE CORRECTIONS", c:"#EA5A3D", it:1 } ] } ]},
 };

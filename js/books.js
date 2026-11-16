@@ -17,6 +17,8 @@
 // Spine designs live in js/app.js under SPINES. A book without one gets a plain coloured spine.
 
 const BOOKS = [
+  {id:"como-agua-para-chocolate", title:"Como agua para chocolate", titleEn:"Like Water for Chocolate", author:"Laura Esquivel", last:"Esquivel", year:2026, month:11, day:13, country:["Mexico"], genre:"Magical realism", lang:"Spanish", readIn:["Spanish"], format:"paper", onLoan:false, pages:256, color:1, cover:true,
+   reflection:"Hard to get the transitions between \"real\" and \"fantasy\", and a bit over-romantic at times. But this is my first official book in Spanish, so I feel a sense of accomplishment."},
   {id:"brothers", title:"兄弟", titleEn:"Brothers", author:"Yu Hua", last:"Yu Hua", year:2026, month:9, day:null, country:["China"], genre:"Literary", lang:null, readIn:["Chinese"], format:"paper", onLoan:false, pages:640, color:0, cover:true,
    reflection:"Yu Hua is a master of tragedy, but somehow this book was longer than it was captivating. Some of the characters are unrealistic to the point of making me feel like they were unrelatable."},
   {id:"ah-q", title:"阿Q正傳", titleEn:"The True Story of Ah Q", author:"Lu Xun", last:"Lu Xun", year:2020, month:null, day:null, country:["China"], genre:"Literary", lang:null, readIn:["English", "Chinese"], format:"paper", onLoan:false, pages:160, color:6, cover:true,
